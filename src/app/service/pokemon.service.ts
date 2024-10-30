@@ -8,7 +8,7 @@ import { map, of } from 'rxjs';
 })
 export class PokemonService {
 
-  data?: PokemonResponse
+  data!: PokemonResponse
 
   constructor(private http: HttpClient) { }
 
@@ -38,12 +38,19 @@ export class PokemonService {
 
   loadMorePokemons(){
     try {
-      return this.http.get<PokemonResponse>(this.data?.next!)
+      return this.http.get<PokemonResponse>(this.data?.next!).pipe(
+        map(res=>{
+        return this.data = {
+            ...this.data,
+            results: [...this.data!.results, ...res.results],
+            next: res.next
+         }
+        })
+       )
     } catch (error) {
       console.log("Error fetching pokemon",error)
       return
     }
-
   }
 
 }
