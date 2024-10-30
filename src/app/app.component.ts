@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
 
   public selectedPokemon?: any
 
-  public allPokemons: Pokemon[] = []
+  public allPokemons: Pokemon[]= []
 
   constructor(
     public pokeData: PokemonService,
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
   }
 
   private getPokemon(){
-    this.pokemons$ = this.pokeData.getPokemon().pipe(
+    this.pokemons$ = this.pokeData.getPokemon()?.pipe(
       map((res: PokemonResponse) => {
         this.allPokemons = res.results
         return res
@@ -42,13 +42,13 @@ export class AppComponent implements OnInit {
   }
 
   public onPokemonSelect(e: Pokemon){
-   this.pokeData.getPokemonDetails(e.name).subscribe(res=>{
+   this.pokeData.getPokemonDetails(e.name)?.subscribe(res=>{
     this.selectedPokemon = res
    })
   }
 
   public onLoadMore(e: any){
-     this.pokeData.loadMorePokemons().subscribe((res:PokemonResponse)=>{
+     this.pokeData.loadMorePokemons()?.subscribe((res:PokemonResponse)=>{
       this.allPokemons = [...this.allPokemons, ...res.results]
      })
   }

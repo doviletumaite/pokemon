@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PokemonResponse } from '../interfaces/pokemon';
-import { map } from 'rxjs';
+import { map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,20 +13,37 @@ export class PokemonService {
   constructor(private http: HttpClient) { }
 
   getPokemon(){
-   return this.http.get<PokemonResponse>('https://pokeapi.co/api/v2/pokemon?&limit=151').pipe(
-    map(res=>{
-      this.data = res
-      return res
-    })
-   )
+    try {
+      return this.http.get<PokemonResponse>('https://pokeapi.co/api/v2/pokemon?&limit=151').pipe(
+        map(res=>{
+          this.data = res
+          return res
+        })
+       )
+    } catch (error) {
+      console.log("Error fetchinig pokemon",error)
+      return
+    }
   }
 
   getPokemonDetails(name: string){
-    return this.http.get<PokemonResponse>('https://pokeapi.co/api/v2/pokemon/' + name)
+    try {
+      return this.http.get<PokemonResponse>('https://pokeapi.co/api/v2/pokemon/' + name)
+    } catch (error) {
+      console.log("Error fetchinig pokemon",error)
+      return
+    }
+
    }
 
   loadMorePokemons(){
-    return this.http.get<PokemonResponse>(this.data?.next!)
+    try {
+      return this.http.get<PokemonResponse>(this.data?.next!)
+    } catch (error) {
+      console.log("Error fetchinig pokemon",error)
+      return
+    }
+
   }
 
 }
