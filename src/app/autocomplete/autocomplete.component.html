@@ -12,7 +12,8 @@
       [value]="utils.capitalizeFirstLetter(searchControl.value!)"
       (input)="onInputChange(searchControl)"
       (focus)="onFocus()"
-      placeholder="Choose your favorite...">
+      placeholder="Choose your favorite..."
+      autocomplete="off">
       <div class="inpput-icons-box">
         @if (!searchControl.value && showDropdownList) {
           <span class="material-symbols-outlined">
