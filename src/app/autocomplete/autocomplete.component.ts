@@ -71,6 +71,7 @@ export class AutocompleteComponent<T> implements OnInit, OnChanges{
     this.select.emit(item)
     this.searchControl.setValue(item.name)
     this.showDropdownList = false
+    this.isInputFocused = false
   }
 
   public highlightMatch(item: any): string {
