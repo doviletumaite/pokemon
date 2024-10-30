@@ -21,7 +21,7 @@ export class PokemonService {
         })
        )
     } catch (error) {
-      console.log("Error fetchinig pokemon",error)
+      console.log("Error fetching pokemon",error)
       return
     }
   }
@@ -30,7 +30,7 @@ export class PokemonService {
     try {
       return this.http.get<PokemonResponse>('https://pokeapi.co/api/v2/pokemon/' + name)
     } catch (error) {
-      console.log("Error fetchinig pokemon",error)
+      console.log("Error fetching pokemon",error)
       return
     }
 
@@ -40,7 +40,7 @@ export class PokemonService {
     try {
       return this.http.get<PokemonResponse>(this.data?.next!)
     } catch (error) {
-      console.log("Error fetchinig pokemon",error)
+      console.log("Error fetching pokemon",error)
       return
     }
 
