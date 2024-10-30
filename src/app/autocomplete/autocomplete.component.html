@@ -9,7 +9,7 @@
       type="text"
       name="search"
       [formControl]="searchControl"
-      [value]="utils.capitalizeFirstLetter(searchControl?.value!)"
+      [value]="utils.capitalizeFirstLetter(searchControl.value!)"
       (input)="onInputChange(searchControl)"
       (focus)="onFocus()"
       placeholder="Choose your favorite...">
