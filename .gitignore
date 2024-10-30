@@ -44,3 +44,4 @@ Thumbs.db
 
 /src/environments/
 package-lock.json
+.vscode
