@@ -1,4 +1,18 @@
 <div class="container">
   <h1 class="title">PokeSelect</h1>
-    <app-autocomplete [itemList]="(pokemon$ | async)?.results || []"></app-autocomplete>
+    <app-autocomplete
+    [itemList]="allPokemons"
+    (select)="onPokemonSelect($event)"
+    (reachedBottom)="onLoadMore($event)"
+    (reset)="onReset($event)"></app-autocomplete>
+
+    @if (selectedPokemon) {
+      <div class="card">
+        <img [src]="selectedPokemon.sprites.front_default" alt="">
+        <div class="card-description">
+          <h3>{{utils.capitalizeFirstLetter(selectedPokemon.name)}}</h3>
+          <p>Weight: {{selectedPokemon.weight}}</p>
+        </div>
+      </div>
+    }
 </div>

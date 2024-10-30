@@ -5,6 +5,7 @@ import { PokemonService } from './service/pokemon.service';
 import { Pokemon, PokemonResponse } from './interfaces/pokemon';
 import { map, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { UtilsService } from './service/utils';
 
 @Component({
   selector: 'app-root',
@@ -15,17 +16,45 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent implements OnInit {
 
-  public pokemon$?: Observable<PokemonResponse>
+  public pokemons$?: Observable<PokemonResponse>
 
-  constructor(public pokeData: PokemonService){}
+  public selectedPokemon?: any
+
+  public allPokemons: Pokemon[] = []
+
+  constructor(
+    public pokeData: PokemonService,
+    public utils: UtilsService
+  ){}
 
   ngOnInit(): void {
     this.getPokemon()
+    this.pokemons$?.subscribe()
   }
 
-  getPokemon(){
-    this.pokemon$ = this.pokeData.getPokemon()
+  private getPokemon(){
+    this.pokemons$ = this.pokeData.getPokemon().pipe(
+      map((res: PokemonResponse) => {
+        this.allPokemons = res.results
+        return res
+      })
+    )
   }
 
+  public onPokemonSelect(e: Pokemon){
+   this.pokeData.getPokemonDetails(e.name).subscribe(res=>{
+    this.selectedPokemon = res
+   })
+  }
+
+  public onLoadMore(e: any){
+     this.pokeData.loadMorePokemons().subscribe((res:PokemonResponse)=>{
+      this.allPokemons = [...this.allPokemons, ...res.results]
+     })
+  }
+
+  public onReset(e:boolean){
+    this.selectedPokemon = undefined
+  }
 }
 

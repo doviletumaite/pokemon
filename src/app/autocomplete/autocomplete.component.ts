@@ -1,6 +1,7 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, HostListener, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { UtilsService } from '../service/utils';
 
 @Component({
   selector: 'app-autocomplete',
@@ -9,44 +10,103 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.less'
 })
-export class AutocompleteComponent<T> implements OnInit {
+export class AutocompleteComponent<T> implements OnInit, OnChanges{
 
-  @Input() itemList: T[] = []
+  @Input() itemList: T[] | any[] = []
+
+  @Input() filteredItems: T[] | any[] = []
 
   @Output() select = new EventEmitter<T>()
 
-  searchControl = new FormControl('');
+  @Output() reset = new EventEmitter<boolean>()
 
-  showDropdownList = false;
+  @Output() reachedBottom = new EventEmitter<boolean>()
 
-  constructor(){}
+  public searchControl = new FormControl('');
 
-  ngOnInit(): void {}
+  public showDropdownList = false;
 
-  onSelect(item: T){
-   this.select.emit(item)
+  public isInputFocused = false
+
+  constructor(public utils: UtilsService){}
+
+  ngOnInit(): void {
+    this.filteredItems = [...this.itemList]
+
+    this.searchControl.valueChanges.subscribe(value => {
+      this.onInputChange(value)
+    });
   }
 
-  onInputChange(){
-
+  public trackItem (index: number, item: any) {
+     return `${item.name}-${index}`
   }
 
-  showDropdown(){
+  public onInputChange(value: string | any) {
+    if (typeof value !== 'string') {
+      return;
+    }
+
+    const searchValue = value as string ? (value as string).toLowerCase() : ''
+
+    this.filteredItems = this.itemList
+      .filter(item => item.name.toLowerCase().includes(searchValue))
+
+    this.showDropdownList = this.filteredItems.length > 0
+  }
+
+  public onFocus(){
+   this.filteredItems = this.itemList
    this.showDropdownList = true
+   this.isInputFocused = true
   }
 
-  hideDropdown(){
+  public hideDropdown(){
     this.showDropdownList = false
   }
 
-  onItemSelect(item: any) {
-    this.select.emit(item);
-    this.searchControl.setValue(item.name);
-    this.showDropdownList = false;
+  public onItemSelect(item: any) {
+    this.select.emit(item)
+    this.searchControl.setValue(item.name)
+    this.showDropdownList = false
   }
 
-  highlightMatch(item: any): string {
-    const regex = new RegExp(`(${this.searchControl.value})`, 'gi');
-    return item.name.replace(regex, '<strong>$1</strong>');
+  public highlightMatch(item: any): string {
+    const regex = new RegExp(`(${this.searchControl.value})`, 'gi')
+    return item.name.replace(regex, '<strong>$1</strong>')
+  }
+
+  @HostListener('scroll', ['$event']) onScroll(event: Event) {
+    const target = event.target as HTMLElement
+
+    if (target.scrollTop + target.clientHeight >= target.scrollHeight) {
+      this.reachedBottom.emit(true);
+    }
+  }
+
+  @HostListener('document:click', ['$event']) onClick(event: MouseEvent) {
+    const target = event.target as HTMLElement
+    const inputBox = document.querySelector('.input-box') as HTMLElement
+    const dropdown = document.querySelector('.pop-up-list-container') as HTMLElement
+
+    if (inputBox && !inputBox.contains(target) && dropdown && !dropdown.contains(target)) {
+        this.showDropdownList = false
+    }
+}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['itemList']) {
+      this.updateFilteredItems()
+    }
+  }
+
+  private updateFilteredItems(): void {
+    this.filteredItems = this.itemList
+  }
+
+  public onReset(){
+    this.searchControl.setValue('')
+    this.showDropdownList = false
+    this.reset.emit(true)
   }
 }

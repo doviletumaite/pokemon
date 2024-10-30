@@ -1,10 +1,22 @@
+
 .autocomplete-container {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .input-box {
   background-color: #F5F5F5;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 1rem;
+}
+
+.inner-input-box{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 input {
@@ -12,6 +24,35 @@ input {
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
   appearance: none !important;
+  border: none;
+  outline: none;
+  width: 80%;
+  cursor: pointer;
+  font-size: 14px;
+  color: #005CC6;
+}
+
+input::placeholder{
+  font-size: 14px;
+  color: #5B5B5B;
+}
+
+input:active,
+input:focus,
+input:focus-visible,
+input:focus-within {
+  background-color: transparent;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  border: none;
+  outline: none;
+}
+
+label {
+  font-weight: 400;
+  font-size: 8px;
+  padding: 0 0 px 0;
 }
 
 .pop-up-list-container{
@@ -23,10 +64,11 @@ input {
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 4px;
-
+  overflow-y: auto;
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
+  width: -webkit-fill-available;
 }
 
 .list-item {
@@ -35,5 +77,31 @@ input {
 }
 
 .list-item:hover {
-  background-color: #f0f0f0;
+  background-color: #F2FAFE;
+}
+
+.list-item:focus {
+  background-color: #DFF3FC;
+  font-weight: 600;
+}
+
+.inpput-icons-box{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.close{
+  z-index: 9999;
+  cursor: pointer;
+  font-size: 20px;
+  color: #5B5B5B;
+}
+
+.search {
+  font-size: 17px;
+  color: #005CC6;
+}
+
+.input-focused {
+  border-bottom:  2px solid #005CC6;
 }

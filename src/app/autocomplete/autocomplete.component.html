@@ -1,20 +1,46 @@
 
 <div class="autocomplete-container">
-  <div class="input-box">
-    <p>Favorite Character</p>
-    <input
-    type="text"
-    [formControl]="searchControl"
-    (input)="onInputChange()"
-    (focus)="showDropdown()"
+  <div
+  class="input-box"
+  [ngClass]="{'input-focused': isInputFocused || searchControl.value}">
+    <label for="search">Favorite Character</label>
+    <div class="inner-input-box">
+      <input
+      type="text"
+      name="search"
+      [formControl]="searchControl"
+      [value]="utils.capitalizeFirstLetter(searchControl?.value!)"
+      (input)="onInputChange(searchControl)"
+      (focus)="onFocus()"
+      placeholder="Choose your favorite...">
+      <div class="inpput-icons-box">
+        @if (!searchControl.value && showDropdownList) {
+          <span class="material-symbols-outlined">
+            keyboard_arrow_up
+          </span>
+        } @else if (!searchControl.value && !showDropdownList){
+          <span class="material-symbols-outlined">
+            keyboard_arrow_down
+          </span>
+        } @else if (searchControl.value){
+          <span (click)="onReset()" class="material-symbols-outlined close">
+            close
+          </span>
+        }
 
-    placeholder="Choose your favorite...">
+          @if (searchControl.value && isInputFocused ) {
+            <span class="material-symbols-outlined search">
+              search
+            </span>
+          }
+      </div>
+    </div>
   </div>
 
   @if (showDropdownList) {
     <div class="pop-up-list-container">
-      <div class="pop-up-list">
-        @for(item of itemList; track item){
+      <div class="pop-up-list" (scroll)="onScroll($event)">
+        @for(item of filteredItems;  let idx = $index; track trackItem(idx, item)){
           <div
           (click)="onItemSelect(item)"
           [innerHTML]="highlightMatch(item)"
@@ -25,6 +51,5 @@
         }
       </div>
     </div>
-
   }
 </div>
