@@ -4,7 +4,8 @@
     [itemList]="allPokemons"
     (select)="onPokemonSelect($event)"
     (reachedBottom)="onLoadMore($event)"
-    (reset)="onReset($event)"></app-autocomplete>
+    (reset)="onReset($event)"
+    [searchKey]="'name'"></app-autocomplete>
 
     @if (selectedPokemon) {
       <div class="card">

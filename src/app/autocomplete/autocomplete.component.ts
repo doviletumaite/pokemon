@@ -14,13 +14,15 @@ export class AutocompleteComponent<T> implements OnInit, OnChanges{
 
   @Input() itemList: T[] | any[] = []
 
-  @Input() filteredItems: T[] | any[] = []
+  public filteredItems: T[] | any[] = []
 
   @Output() select = new EventEmitter<T>()
 
   @Output() reset = new EventEmitter<boolean>()
 
   @Output() reachedBottom = new EventEmitter<boolean>()
+
+  @Input() searchKey!: string
 
   public searchControl = new FormControl('');
 
@@ -47,10 +49,10 @@ export class AutocompleteComponent<T> implements OnInit, OnChanges{
       return;
     }
 
-    const searchValue = value as string ? (value as string).toLowerCase() : ''
+    const searchValue = value.toLowerCase()
 
     this.filteredItems = this.itemList
-      .filter(item => item.name.toLowerCase().includes(searchValue))
+      .filter(item => item[this.searchKey]?.toLowerCase().includes(searchValue))
 
     this.showDropdownList = this.filteredItems.length > 0
   }
@@ -73,7 +75,7 @@ export class AutocompleteComponent<T> implements OnInit, OnChanges{
 
   public highlightMatch(item: any): string {
     const regex = new RegExp(`(${this.searchControl.value})`, 'gi')
-    return item.name.replace(regex, '<strong>$1</strong>')
+    return item[this.searchKey]?.replace(regex, '<strong>$1</strong>')
   }
 
   @HostListener('scroll', ['$event']) onScroll(event: Event) {
