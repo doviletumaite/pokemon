@@ -1,0 +1,30 @@
+
+<div class="autocomplete-container">
+  <div class="input-box">
+    <p>Favorite Character</p>
+    <input
+    type="text"
+    [formControl]="searchControl"
+    (input)="onInputChange()"
+    (focus)="showDropdown()"
+
+    placeholder="Choose your favorite...">
+  </div>
+
+  @if (showDropdownList) {
+    <div class="pop-up-list-container">
+      <div class="pop-up-list">
+        @for(item of itemList; track item){
+          <div
+          (click)="onItemSelect(item)"
+          [innerHTML]="highlightMatch(item)"
+          class="list-item"
+          ></div>
+        } @empty {
+          <div>No Data</div>
+        }
+      </div>
+    </div>
+
+  }
+</div>

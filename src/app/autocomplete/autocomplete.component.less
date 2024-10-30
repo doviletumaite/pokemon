@@ -1,0 +1,39 @@
+.autocomplete-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-box {
+  background-color: #F5F5F5;
+}
+
+input {
+  background-color: transparent;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+.pop-up-list-container{
+  position: relative;
+}
+
+.pop-up-list {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.list-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.list-item:hover {
+  background-color: #f0f0f0;
+}
