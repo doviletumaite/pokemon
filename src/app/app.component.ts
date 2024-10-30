@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { AutocompleteComponent } from "./autocomplete/autocomplete.component";
 import { PokemonService } from './service/pokemon.service';
 import { Pokemon, PokemonResponse } from './interfaces/pokemon';
-import { map, Observable } from 'rxjs';
+import { map, mergeMap, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { UtilsService } from './service/utils';
 
@@ -16,8 +16,6 @@ import { UtilsService } from './service/utils';
 })
 export class AppComponent implements OnInit {
 
-  public pokemons$?: Observable<PokemonResponse>
-
   public selectedPokemon?: any
 
   public allPokemons: Pokemon[]= []
@@ -29,12 +27,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPokemon()
-    this.pokemons$?.subscribe()
   }
 
   private getPokemon(){
-    this.pokemons$ = this.pokeData.getPokemon()?.pipe(
-      map((res: PokemonResponse) => {
+   this.pokeData.getPokemon()?.subscribe(
+      ((res: PokemonResponse) => {
         this.allPokemons = res.results
         return res
       })

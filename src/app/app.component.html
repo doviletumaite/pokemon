@@ -9,7 +9,7 @@
 
     @if (selectedPokemon) {
       <div class="card">
-        <img [src]="selectedPokemon.sprites.front_default" alt="">
+        <img [src]="selectedPokemon.sprites.front_default" alt="" loading="lazy">
         <div class="card-description">
           <h3>{{utils.capitalizeFirstLetter(selectedPokemon.name)}}</h3>
           <p>Weight: {{selectedPokemon.weight}}</p>

@@ -26,6 +26,8 @@ export class AutocompleteComponent<T> implements OnInit, OnChanges{
 
   public searchControl = new FormControl('');
 
+  private typedValue?: string
+
   public showDropdownList = false;
 
   public isInputFocused = false
@@ -49,10 +51,13 @@ export class AutocompleteComponent<T> implements OnInit, OnChanges{
       return;
     }
 
-    const searchValue = value.toLowerCase()
+    this.typedValue = value.toLocaleLowerCase()
+    this.onFilterItems()
+  }
 
+  onFilterItems(){
     this.filteredItems = this.itemList
-      .filter(item => item[this.searchKey]?.toLowerCase().includes(searchValue))
+      .filter(item => item[this.searchKey]?.toLowerCase().includes(this.typedValue))
 
     this.showDropdownList = this.filteredItems.length > 0
   }
