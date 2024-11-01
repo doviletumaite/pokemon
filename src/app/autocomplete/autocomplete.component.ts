@@ -53,10 +53,6 @@ export class AutocompleteComponent<T> implements OnInit, OnChanges{
     });
   }
 
-  public trackItem (index: number, item: any) {
-     return `${item.name}-${index}`
-  }
-
   public onInputChange(value: string | any) {
     if (typeof value !== 'string') {
       return;
@@ -69,6 +65,15 @@ export class AutocompleteComponent<T> implements OnInit, OnChanges{
   onFilterItems(){
     this.filteredItems = this.itemList
       .filter(item => item[this.searchKey]?.toLowerCase().includes(this.typedValue))
+      .sort((a, b) => {
+        const aStartsWith = a[this.searchKey]?.toLowerCase().startsWith(this.typedValue)
+        const bStartsWith = b[this.searchKey]?.toLowerCase().startsWith(this.typedValue)
+
+        if (aStartsWith && !bStartsWith) return -1
+        if (!aStartsWith && bStartsWith) return 1
+
+        return 0;
+      });
 
     this.showDropdownList = this.filteredItems.length > 0
   }

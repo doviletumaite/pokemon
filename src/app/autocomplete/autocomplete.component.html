@@ -43,7 +43,7 @@
   @if (showDropdownList) {
     <div class="pop-up-list-container">
       <div class="pop-up-list" appScrollToBottom (reachedBottom)="loadMoreContent()">
-        @for(item of filteredItems;  let idx = $index; track trackItem(idx, item)){
+        @for(item of filteredItems;  let i = $index; track i){
           <div
           (click)="onItemSelect(item)"
           [innerHTML]="item[searchKey] | highlightText: searchControl.value | capitalizeFirstLetter"
