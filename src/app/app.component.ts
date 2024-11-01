@@ -3,14 +3,18 @@ import { RouterOutlet } from '@angular/router';
 import { AutocompleteComponent } from "./autocomplete/autocomplete.component";
 import { PokemonService } from './service/pokemon.service';
 import { Pokemon, PokemonResponse } from './interfaces/pokemon';
-import { map, mergeMap, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { UtilsService } from './service/utils';
+import { CapitalizeFirstLetterPipe } from './pipes/capitalize-first-letter.pipe';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, AutocompleteComponent, CommonModule],
+  imports: [
+    RouterOutlet,
+    AutocompleteComponent,
+    CommonModule,
+    CapitalizeFirstLetterPipe
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.less'
 })
@@ -21,8 +25,7 @@ export class AppComponent implements OnInit {
   public allPokemons: Pokemon[]= []
 
   constructor(
-    public pokeData: PokemonService,
-    public utils: UtilsService
+    public pokeData: PokemonService
   ){}
 
   ngOnInit(): void {

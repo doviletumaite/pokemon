@@ -11,7 +11,7 @@
       <div class="card">
         <img [src]="selectedPokemon.sprites.front_default" alt="" loading="lazy">
         <div class="card-description">
-          <h3>{{utils.capitalizeFirstLetter(selectedPokemon.name)}}</h3>
+          <h3>{{selectedPokemon.name | capitalizeFirstLetter}}</h3>
           <p>Weight: {{selectedPokemon.weight}}</p>
         </div>
       </div>

@@ -2,6 +2,8 @@
 <div class="autocomplete-container">
   <div
   class="input-box"
+  appClickOutside
+  (clickOutside)="showDropdownList = false"
   [ngClass]="{'input-focused': isInputFocused || searchControl.value}">
     <label for="search">Favorite Character</label>
     <div class="inner-input-box">
@@ -9,7 +11,7 @@
       type="text"
       name="search"
       [formControl]="searchControl"
-      [value]="utils.capitalizeFirstLetter(searchControl.value!)"
+      [value]="searchControl.value! | capitalizeFirstLetter"
       (input)="onInputChange(searchControl)"
       (focus)="onFocus()"
       placeholder="Choose your favorite..."
@@ -40,11 +42,11 @@
 
   @if (showDropdownList) {
     <div class="pop-up-list-container">
-      <div class="pop-up-list" (scroll)="onScroll($event)">
+      <div class="pop-up-list" appScrollToBottom (reachedBottom)="loadMoreContent()">
         @for(item of filteredItems;  let idx = $index; track trackItem(idx, item)){
           <div
           (click)="onItemSelect(item)"
-          [innerHTML]="highlightMatch(item)"
+          [innerHTML]="item[searchKey] | highlightText: searchControl.value | capitalizeFirstLetter"
           class="list-item"
           ></div>
         } @empty {

@@ -1,12 +1,23 @@
 import { Component, Input, OnInit, Output, EventEmitter, HostListener, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { UtilsService } from '../service/utils';
+import { ClickOutsideDirective } from '../directives/click-outside.directive';
+import { ScrollToBottomDirective } from '../directives/scroll-to-bottom.directive';
+import { HighlightTextPipe } from '../pipes/highlight-text.pipe';
+import { CapitalizeFirstLetterPipe } from '../pipes/capitalize-first-letter.pipe';
 
 @Component({
   selector: 'app-autocomplete',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ClickOutsideDirective,
+    ScrollToBottomDirective,
+    HighlightTextPipe,
+    CapitalizeFirstLetterPipe
+  ],
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.less'
 })
@@ -32,7 +43,7 @@ export class AutocompleteComponent<T> implements OnInit, OnChanges{
 
   public isInputFocused = false
 
-  constructor(public utils: UtilsService){}
+  constructor(){}
 
   ngOnInit(): void {
     this.filteredItems = [...this.itemList]
@@ -79,28 +90,9 @@ export class AutocompleteComponent<T> implements OnInit, OnChanges{
     this.isInputFocused = false
   }
 
-  public highlightMatch(item: any): string {
-    const regex = new RegExp(`(${this.searchControl.value})`, 'gi')
-    return item[this.searchKey]?.replace(regex, '<strong>$1</strong>')
+  loadMoreContent(){
+    this.reachedBottom.emit(true);
   }
-
-  @HostListener('scroll', ['$event']) onScroll(event: Event) {
-    const target = event.target as HTMLElement
-
-    if (target.scrollTop + target.clientHeight >= target.scrollHeight) {
-      this.reachedBottom.emit(true);
-    }
-  }
-
-  @HostListener('document:click', ['$event']) onClick(event: MouseEvent) {
-    const target = event.target as HTMLElement
-    const inputBox = document.querySelector('.input-box') as HTMLElement
-    const dropdown = document.querySelector('.pop-up-list-container') as HTMLElement
-
-    if (inputBox && !inputBox.contains(target) && dropdown && !dropdown.contains(target)) {
-        this.showDropdownList = false
-    }
-}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['itemList']) {
