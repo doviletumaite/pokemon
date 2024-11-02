@@ -42,7 +42,7 @@
 
   @if (showDropdownList) {
     <div class="pop-up-list-container">
-      <div class="pop-up-list" appScrollToBottom (reachedBottom)="loadMoreContent()">
+      <div class="pop-up-list" appScrollToBottom (reachedBottom)="!searchControl.value ? loadMoreContent() : ''">
         @for(item of filteredItems;  let i = $index; track i){
           <div
           (click)="onItemSelect(item)"
